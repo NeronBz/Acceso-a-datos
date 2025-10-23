@@ -13,8 +13,13 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Scanner;
 import java.util.TreeSet;
+
+import Ejercicios.Alumno;
 
 public class repaso {
 	/*
@@ -26,9 +31,16 @@ public class repaso {
 	 */
 	Scanner sc = new Scanner(System.in);
 
+	//Lista con duplicados:
 	ArrayList<String> nombres = new ArrayList<String>();
-
+	//Lista sin duplicados:
+	HashSet<String> casas = new HashSet<String>();
+	//Lista sin duplicados y ordenados por el orden de inserción:
+	LinkedHashSet<String> niveles = new LinkedHashSet<String>();
+	//Lista sin duplicados y ordenados por el grupo:
 	TreeSet<String> archivos = new TreeSet<String>();
+	//Lista sin duplicados y ordenados por el orden de inserción clave-valor:
+	LinkedHashMap<String, Alumno> lista = new LinkedHashMap<String, Alumno>();
 
 	File archivo = new File(ruta);
 
