@@ -1,5 +1,14 @@
 package Manejo_de_ficheros_2;
 
+import java.util.Scanner;
+import java.util.TreeMap;
+import java.util.TreeSet;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.*;
+
 public class Ej_37 {
 
 	public static void main(String[] args) {
@@ -11,6 +20,54 @@ public class Ej_37 {
 		 * resultado:
 		 */
 
+		TreeMap<Integer, Alumno> datos = new TreeMap<Integer, Alumno>();
+		boolean continuar = false;
+		try {
+			// Creamos la factoría
+			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
+			// Creamos el DocumentBuilder
+			DocumentBuilder db = factoria.newDocumentBuilder();
+			// Creamos un DOM vacío
+			Document documento = db.newDocument();
+			// Establecemos la versión
+			documento.setXmlVersion("1.0");
+			// Creamos elementos y añadimos al DOM
+			Element elemento1 = documento.createElement("alumnos");
+			documento.appendChild(elemento1);
+
+			do {
+				Scanner sc = new Scanner(System.in);
+				System.out.println("Indica el expediente: ");
+				String expediente = sc.nextLine();
+				System.out.println("Indica el nombre del alumno: ");
+				String nombre = sc.nextLine();
+				System.out.println("Indica la nota: ");
+				String nota = sc.nextLine();
+
+				Element eAlumno = documento.createElement("alumno");
+				Element eExpediente = documento.createElement("numExpediente");
+				Element eNombre = documento.createElement("nombreAlumno");
+				Element eNota = documento.createElement("nota");
+
+				Text tExpediente = documento.createTextNode(expediente);
+				Text tNombre = documento.createTextNode(nombre);
+				Text tNota = documento.createTextNode(nota);
+
+				elemento1.appendChild(eAlumno);
+				eAlumno.appendChild(eExpediente);
+				eAlumno.appendChild(eNombre);
+				eAlumno.appendChild(eNota);
+
+				System.out.println("¿Quieres crear otro alumno?: ");
+				String respuesta = sc.nextLine();
+
+				if (!respuesta.equalsIgnoreCase("si")) {
+					continuar = false;
+				}
+			} while (continuar);
+		} catch (Exception e) {
+
+		}
 	}
 
 }
