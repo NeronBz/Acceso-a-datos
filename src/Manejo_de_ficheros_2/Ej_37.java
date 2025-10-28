@@ -2,10 +2,15 @@ package Manejo_de_ficheros_2;
 
 import java.util.Scanner;
 import java.util.TreeMap;
-import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.File;
 
 import org.w3c.dom.*;
 
@@ -19,10 +24,10 @@ public class Ej_37 {
 		 * de los datos se guardarán en un fichero notasAlumno.xml con el siguiente
 		 * resultado:
 		 */
-		//dkgflkdfgnlkdfgawdawd
 
 		TreeMap<Integer, Alumno> datos = new TreeMap<Integer, Alumno>();
-		boolean continuar = false;
+		Scanner sc = new Scanner(System.in);
+		boolean continuar = true;
 		try {
 			// Creamos la factoría
 			DocumentBuilderFactory factoria = DocumentBuilderFactory.newInstance();
@@ -37,27 +42,14 @@ public class Ej_37 {
 			documento.appendChild(elemento1);
 
 			do {
-				Scanner sc = new Scanner(System.in);
 				System.out.println("Indica el expediente: ");
-				String expediente = sc.nextLine();
+				int expediente = Integer.parseInt(sc.nextLine());
 				System.out.println("Indica el nombre del alumno: ");
 				String nombre = sc.nextLine();
 				System.out.println("Indica la nota: ");
-				String nota = sc.nextLine();
+				double nota = Double.parseDouble(sc.nextLine());
 
-				Element eAlumno = documento.createElement("alumno");
-				Element eExpediente = documento.createElement("numExpediente");
-				Element eNombre = documento.createElement("nombreAlumno");
-				Element eNota = documento.createElement("nota");
-
-				Text tExpediente = documento.createTextNode(expediente);
-				Text tNombre = documento.createTextNode(nombre);
-				Text tNota = documento.createTextNode(nota);
-
-				elemento1.appendChild(eAlumno);
-				eAlumno.appendChild(eExpediente);
-				eAlumno.appendChild(eNombre);
-				eAlumno.appendChild(eNota);
+				datos.put(expediente, new Alumno(expediente, nombre, nota));
 
 				System.out.println("¿Quieres crear otro alumno?: ");
 				String respuesta = sc.nextLine();
@@ -66,8 +58,38 @@ public class Ej_37 {
 					continuar = false;
 				}
 			} while (continuar);
-		} catch (Exception e) {
 
+			for (Alumno a : datos.values()) {
+				Element eAlumno = documento.createElement("alumno");
+				Element eExpediente = documento.createElement("numExpediente");
+				Element eNombre = documento.createElement("nombreAlumno");
+				Element eNota = documento.createElement("nota");
+
+				Text tExpediente = documento.createTextNode(Integer.toString(a.getExpediente()));
+				Text tNombre = documento.createTextNode(a.getNombre());
+				Text tNota = documento.createTextNode(Double.toString(a.getNota()));
+
+				elemento1.appendChild(eAlumno);
+				eAlumno.appendChild(eExpediente);
+				eAlumno.appendChild(eNombre);
+				eAlumno.appendChild(eNota);
+				eExpediente.appendChild(tExpediente);
+				eNombre.appendChild(tNombre);
+				eNota.appendChild(tNota);
+			}
+			sc.close();
+
+			//Guardar en XML
+			DOMSource fuente = new DOMSource(documento);
+			StreamResult ficheroXML = new StreamResult(new File("notasAlumno.xml"));
+			Transformer t = TransformerFactory.newInstance().newTransformer();
+			t.setOutputProperty(OutputKeys.INDENT, "yes");
+			t.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+			t.transform(fuente, ficheroXML);
+			
+			System.out.println("Datos creados");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
